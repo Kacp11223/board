@@ -9,6 +9,7 @@ public class IndexModel : PageModel
     public Cell[,] Board => _gameBoard.Board;
     public int Turn { get; private set; } = 0;
     public int MaxTurns { get; private set; } = 30;
+    public int RemainingMines => 4 - _gameBoard.GetCurrentMines();
 
     public IndexModel(GameBoard gameBoard)
     {
@@ -31,7 +32,10 @@ public class IndexModel : PageModel
 
     public IActionResult OnPostCellClick(int row, int column)
     {
-        _gameBoard.PlaceMine(row, column);
+        if (_gameBoard.CanPlaceMine(row, column))
+        {
+            _gameBoard.PlaceMine(row, column);
+        }
         return Page();
     }
 }

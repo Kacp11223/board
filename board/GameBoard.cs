@@ -4,9 +4,11 @@ public class GameBoard
 {
     private const int Rows = 8;
     private const int Columns = 8;
+    private const int MaxMines = 4;
     public Cell[,] Board { get; private set; }
     public List<Creature> Creatures { get; private set; } = new List<Creature>();
     private Random _random = new Random();
+    private int _currentMines = 0;
 
     public GameBoard()
     {
@@ -38,28 +40,64 @@ public class GameBoard
         }
     }
 
+    public bool CanPlaceMine(int row, int column)
+    {
+        return _currentMines < MaxMines && Board[row, column].Creatures.Count == 0;
+    }
+
+    public bool PlaceMine(int row, int column)
+    {
+        if (CanPlaceMine(row, column))
+        {
+            Board[row, column].PlaceMine();
+            _currentMines++;
+            return true;
+        }
+        return false;
+    }
+
+    public void ClearAllMines()
+    {
+        for (int i = 0; i < Rows; i++)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                if (Board[i, j].HasMine)
+                {
+                    Board[i, j].RemoveMine();
+                }
+            }
+        }
+        _currentMines = 0;
+    }
+
     public void MoveCreatures()
     {
+        // First move all creatures
         foreach (var creature in Creatures.ToList())
         {
             Board[creature.Row, creature.Column].RemoveCreature(creature);
             creature.Move(Rows, Columns, _random);
+            Board[creature.Row, creature.Column].AddCreature(creature);
+        }
 
-            // Check for mines
+        // Then check for mine collisions
+        foreach (var creature in Creatures.ToList())
+        {
             var cell = Board[creature.Row, creature.Column];
             if (cell.HasMine)
             {
-                Creatures.Remove(creature); // Remove creature if it steps on a mine
-            }
-            else
-            {
-                cell.AddCreature(creature);
+                cell.RemoveCreature(creature);
+                Creatures.Remove(creature);
             }
         }
+
+        // Clear all mines after movement and collision checks
+        ClearAllMines();
     }
 
-    public void PlaceMine(int row, int column)
+    public int GetCurrentMines()
     {
-        Board[row, column].PlaceMine();
+        return _currentMines;
     }
 }

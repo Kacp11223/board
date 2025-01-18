@@ -19,4 +19,9 @@ public class Cell
     {
         HasMine = true;
     }
+
+    public void RemoveMine()
+    {
+        HasMine = false;
+    }
 }
