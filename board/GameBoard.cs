@@ -73,7 +73,6 @@ public class GameBoard
 
     public void MoveCreatures()
     {
-        // First move all creatures
         foreach (var creature in Creatures.ToList())
         {
             Board[creature.Row, creature.Column].RemoveCreature(creature);
@@ -81,7 +80,7 @@ public class GameBoard
             Board[creature.Row, creature.Column].AddCreature(creature);
         }
 
-        // Then check for mine collisions
+        // Minec check
         foreach (var creature in Creatures.ToList())
         {
             var cell = Board[creature.Row, creature.Column];
@@ -92,7 +91,7 @@ public class GameBoard
             }
         }
 
-        // Clear all mines after movement and collision checks
+        // Mine clear
         ClearAllMines();
     }
 
