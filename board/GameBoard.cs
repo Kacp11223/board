@@ -26,8 +26,8 @@ public class GameBoard
     private void InitializeCreatures()
     {
         Creatures.Add(new Orc("Gruk", 0, 0));
-        Creatures.Add(new Elf("Elanor", 1, 1));
-        Creatures.Add(new Bird("Eagle", 2, 2));
+        Creatures.Add(new Elf("Elanor", 1, 4));
+        Creatures.Add(new Bird("Eagle", 6, 2));
         Creatures.Add(new FlightlessBird("Ostrich", 3, 3));
         PlaceCreaturesOnBoard();
     }
